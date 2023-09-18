@@ -1,15 +1,33 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain, ipcRenderer } = require("electron");
+const { time } = require("node:console");
+const path = require("node:path");
+
+let win;
+let i = 0;
+let timer;
 
 const createWindow = () => {
-    const win = new BrowserWindow({
-        width: 800,
+    win = new BrowserWindow({
+        width: 900,
         height: 600,
+        webPreferences: {
+            preload: path.join(__dirname, "preload.js"),
+        },
     });
 
     win.loadFile("index.html");
+    win.webContents.openDevTools();
 };
 
 app.whenReady().then(() => {
+    ipcMain.handle("send", (_, data) => {
+        console.warn(data);
+    });
+
+    timer = setInterval(() => {
+        win.webContents.send("receive", i++);
+    }, 1000);
+
     createWindow();
 
     app.on("activate", () => {
@@ -18,5 +36,8 @@ app.whenReady().then(() => {
 });
 
 app.on("window-all-closed", () => {
-    if (process.platform !== "darwin") app.quit();
+    if (process.platform !== "darwin") {
+        timer.clearInterval();
+        app.quit();
+    }
 });
