@@ -37,7 +37,7 @@ app.whenReady().then(() => {
 
 app.on("window-all-closed", () => {
     if (process.platform !== "darwin") {
-        timer.clearInterval();
+        clearInterval(timer);
         app.quit();
     }
 });
