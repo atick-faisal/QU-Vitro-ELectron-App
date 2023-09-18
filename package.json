@@ -1,0 +1,14 @@
+{
+  "name": "qu-vitro",
+  "version": "1.0.0",
+  "description": "Frontend for QU-Vitro Pump",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Atick Faisal",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^26.2.1"
+  }
+}
