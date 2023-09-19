@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("api", {
-    send: (data) => ipcRenderer.invoke("send", data),
-    receive: (callback) => ipcRenderer.on("receive", callback),
+    writeToSerial: (data) => ipcRenderer.invoke("writeToSerial", data),
+    onSerialRead: (callback) => ipcRenderer.on("onSerialRead", callback),
 });
