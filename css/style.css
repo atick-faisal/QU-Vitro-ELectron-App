@@ -1,0 +1,33 @@
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+.title {
+    margin: 0;
+    padding: 0;
+    font-size:xx-large;
+    font-weight: 300;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    padding: 20px;
+    height: 500px;
+}
+
+.chart {
+    width: 600px;
+    height: 400px;
+    margin: 30px;
+}
+
+.configuration {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+}

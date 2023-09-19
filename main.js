@@ -4,8 +4,6 @@ const { ReadlineParser } = require("@serialport/parser-readline");
 const path = require("node:path");
 
 let win;
-let i = 0;
-let timer;
 
 const handleSerialComm = async () => {
     const ports = await SerialPort.list();
@@ -27,18 +25,14 @@ const handleSerialComm = async () => {
         console.warn(data);
         port.write(data);
     });
-
-    // timer = setInterval(() => {
-    //     port.write(
-    //         "<0,32,64,95,125,152,177,199,218,233,244,251,254,253,248,239,226,209,188,165,139,110,80,48,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0>"
-    //     );
-    // }, 5000);
 };
 
 const createWindow = () => {
     win = new BrowserWindow({
-        width: 900,
+        width: 1200,
         height: 600,
+        autoHideMenuBar: true,
+        icon: path.join(__dirname, "assets/pump.png"),
         webPreferences: {
             preload: path.join(__dirname, "preload.js"),
         },

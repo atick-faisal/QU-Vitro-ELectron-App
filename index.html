@@ -1,14 +1,54 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <title>QU-Vitro</title>
-  </head>
-  <body>
-    <h1 id="text">Hello World!</h1>
-    <button id="button">SEND MESSAGE</button>
-    <script src="./renderer.js"></script>
-  </body>
+    <head>
+        <meta charset="UTF-8" />
+        <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+        <!-- <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'self'; script-src 'self'"
+        /> -->
+        <link rel="stylesheet" href="./css/pico.min.css" />
+        <link rel="stylesheet" href="./css/style.css" />
+        <script src="./js/plotly.js" charset="utf-8"></script>
+        <title>QU-Vitro</title>
+    </head>
+    <body>
+        <div class="header">
+            <img src="./assets/pump.png" width="40px" height="40px" />
+            <p class="title">QU-VITRO</p>
+            <img src="./assets/settings.png" width="48px" height="48px" />
+        </div>
+        <div class="content">
+            <div id="chart" class="chart"></div>
+            <div class="configuration">
+                <details role="list">
+                    <summary aria-haspopup="listbox">Pump Type</summary>
+                    <ul role="listbox">
+                        <li><a>Syringe</a></li>
+                        <li><a>Peristaltic</a></li>
+                    </ul>
+                </details>
+                <details role="list">
+                    <summary aria-haspopup="listbox">Flow Profile</summary>
+                    <ul role="listbox">
+                        <li><a>Sine Wave</a></li>
+                        <li><a>Half Sine Wave</a></li>
+                    </ul>
+                </details>
+                <label for="frequency">
+                    Frequency
+                    <input
+                        type="text"
+                        id="frequency"
+                        name="frequency"
+                        placeholder="1.25"
+                        required
+                    />
+                </label>
+                <button class="contrast" id="connect">Connect</button>
+                <button id="upload">Upload</button>
+            </div>
+        </div>
+        <script src="./renderer.js"></script>
+    </body>
 </html>
