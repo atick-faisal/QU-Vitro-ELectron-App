@@ -4,11 +4,12 @@ const { ReadlineParser } = require("@serialport/parser-readline");
 const path = require("node:path");
 
 let win;
+let port = null;
 
 const handleSerialComm = async () => {
     const ports = await SerialPort.list();
-    const port = new SerialPort({
-        path: ports.filter((port) => port.pnpId?.includes("CP210"))[0]?.path,
+    port = new SerialPort({
+        path: ports.filter((port) => port?.pnpId?.includes("CP210"))[0].path,
         baudRate: 115200,
     });
     const parser = port.pipe(new ReadlineParser({ delimiter: "\r\n" }));
@@ -19,11 +20,6 @@ const handleSerialComm = async () => {
 
     parser.on("data", (data) => {
         win.webContents.send("onSerialRead", data);
-    });
-
-    ipcMain.handle("writeToSerial", (_, data) => {
-        console.warn(data);
-        port.write(data);
     });
 };
 
@@ -43,8 +39,29 @@ const createWindow = () => {
 };
 
 app.whenReady().then(() => {
-    handleSerialComm();
     createWindow();
+
+    ipcMain.handle("connect", async () => {
+        console.warn("Connecting ... ");
+        try {
+            await handleSerialComm();
+            return true;
+        } catch (e) {
+            console.error(e);
+            return false;
+        }
+    });
+
+    ipcMain.handle("disconnect", async () => {
+        console.warn("Disconnecting ... ");
+        await port.close();
+        port = null;
+    });
+
+    ipcMain.handle("writeToSerial", (_, data) => {
+        console.warn(data);
+        port?.write(data);
+    });
 
     app.on("activate", () => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow();

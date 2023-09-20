@@ -1,7 +1,13 @@
 const text = document.getElementById("text");
+
+const connectButton = document.getElementById("connect");
 const sendButton = document.getElementById("upload");
 const ctx = document.getElementById("chart");
 const flowPicker = document.getElementById("flow-picker");
+
+const connectionSwitch = document.getElementById("connection-switch");
+const connectionStatus = document.getElementById("connection-status")
+
 const halfSineWave = [
     0, 32, 64, 95, 125, 152, 177, 199, 218, 233, 244, 251, 254, 253, 248, 239,
     226, 209, 188, 165, 139, 110, 80, 48, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -18,19 +24,31 @@ const fullSineWave = [
 let pumpType = 1;
 let flowData = [...halfSineWave];
 let flowPeriod = 2000;
+let connected = false;
 
 var plotData = [
     {
         x: [...Array(halfSineWave.length).keys()].map(
-            (x) => x / halfSineWave.length * flowPeriod
+            (x) => (x / halfSineWave.length) * flowPeriod
         ),
         y: halfSineWave,
         fill: "tozeroy",
         fillpattern: { shape: "/" },
-        name: "Flow Profile",
+        name: "Target Flow-Rate",
         mode: "lines",
         line: {
-            color: "#4C566A",
+            color: "#D0BCFF",
+        },
+    },
+    {
+        x: [],
+        y: [],
+        fill: "tozeroy",
+        fillpattern: { shape: "/" },
+        name: "Actual Flow-Rate",
+        mode: "lines",
+        line: {
+            color: "#EFB8C8",
         },
     },
 ];
@@ -40,7 +58,8 @@ const plotConfig = { responsive: false, staticPlot: true };
 const plotLayout = {
     paper_bgcolor: "#00000000",
     plot_bgcolor: "#00000000",
-    showlegend: false,
+    showlegend: true,
+    legend: { x: 1, xanchor: "right", y: 1 },
     xaxis: {
         visible: true,
         showgrid: false,
@@ -51,7 +70,8 @@ const plotLayout = {
         visible: true,
         showgrid: false,
         zeroline: false,
-        title: "Flow Rate (mL/h)",
+        title: "Flow Rate",
+        range: [0, 350],
     },
     margin: {
         l: 50,
@@ -89,19 +109,31 @@ sendButton.addEventListener("click", () => {
     window.api.writeToSerial(serialData);
 });
 
-// window.api.onSerialRead((_, data) => {
-//     const flowRate = data.split(",").map((str) => parseInt(str, 10));
-//     plotData = [...flowRate];
-//     // chart.data.y = plotData;
-//     // chart.update();
+connectButton.addEventListener("click", async () => {
+    if (connected) {
+        await window.api.disconnect();
+        connectButton.innerText = "Connect";
+        connectionStatus.innerText = "Device Disconnected"
+        connected = false;
+    } else {
+        connected = await window.api.connect();
+        if (connected) {
+            connectButton.innerText = "Disconnect";
+            connectionStatus.innerText = "Device Connected"
+        }
+        else alert("Connection Failed");
+    }
+    connectionSwitch.checked = connected;
+});
 
-//     // text.innerText = flowRate.length;
-// });
-
-// const func = async () => {
-//     const response = await window.api.ping();
-//     console.log(response); // prints out 'pong'
-// };
+window.api.onSerialRead((_, data) => {
+    const flowRate = data.split(",").map((str) => parseInt(str, 10));
+    plotData[1]["x"] = [...Array(flowRate.length).keys()].map(
+        (x) => (x / flowRate.length) * flowPeriod
+    );
+    plotData[1]["y"] = [...flowRate];
+    Plotly.update(ctx, plotData, plotLayout, plotConfig);
+});
 
 // ... Pump Type Selector
 const pumpSelector = document.getElementById("pump-selector");
@@ -126,12 +158,16 @@ flowProfileSelector.querySelector("ul").addEventListener("click", (e) => {
     else {
         if (flowProfile === "half sine wave") {
             flowData = [...halfSineWave];
-            plotData[0]["x"] = [...Array(halfSineWave.length).keys()];
+            plotData[0]["x"] = [...Array(halfSineWave.length).keys()].map(
+                (x) => (x / halfSineWave.length) * flowPeriod
+            );
             plotData[0]["y"] = [...halfSineWave];
             Plotly.update(ctx, plotData, plotLayout, plotConfig);
         } else if (flowProfile === "full sine wave") {
             flowData = [...fullSineWave];
-            plotData[0]["x"] = [...Array(fullSineWave.length).keys()];
+            plotData[0]["x"] = [...Array(fullSineWave.length).keys()].map(
+                (x) => (x / fullSineWave.length) * flowPeriod
+            );
             plotData[0]["y"] = [...fullSineWave];
             Plotly.update(ctx, plotData, plotLayout, plotConfig);
         }

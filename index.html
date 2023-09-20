@@ -19,7 +19,21 @@
             <img src="./assets/settings.png" width="48px" height="48px" />
         </div>
         <div class="content">
-            <div id="chart" class="chart"></div>
+            <div class="dashboard">
+                <div id="chart" class="chart"></div>
+                <div class="status">
+                    <input
+                        type="checkbox"
+                        id="connection-switch"
+                        name="switch"
+                        role="switch"
+                    />
+                    <p id="connection-status" class="status-text">
+                        Device Disconnected
+                    </p>
+                </div>
+            </div>
+
             <div class="configuration">
                 <details role="list" id="pump-selector">
                     <summary aria-haspopup="listbox">Pump Type</summary>
@@ -36,8 +50,19 @@
                         <li><a>Custom</a></li>
                     </ul>
                 </details>
-                <input class="flow-picker" type="file" accept=".csv" id="flow-picker" />
-                <input type="number" placeholder="Period (ms) Def 2000" aria-label="Number" min="0" step="200" />
+                <input
+                    class="flow-picker"
+                    type="file"
+                    accept=".csv"
+                    id="flow-picker"
+                />
+                <input
+                    type="number"
+                    placeholder="Period (ms) Def 2000"
+                    aria-label="Number"
+                    min="0"
+                    step="200"
+                />
                 <button class="contrast" id="connect">Connect</button>
                 <button id="upload">Upload</button>
             </div>
