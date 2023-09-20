@@ -21,30 +21,23 @@
         <div class="content">
             <div id="chart" class="chart"></div>
             <div class="configuration">
-                <details role="list">
+                <details role="list" id="pump-selector">
                     <summary aria-haspopup="listbox">Pump Type</summary>
                     <ul role="listbox">
                         <li><a>Syringe</a></li>
                         <li><a>Peristaltic</a></li>
                     </ul>
                 </details>
-                <details role="list">
+                <details role="list" id="flow-profile-selector">
                     <summary aria-haspopup="listbox">Flow Profile</summary>
                     <ul role="listbox">
-                        <li><a>Sine Wave</a></li>
                         <li><a>Half Sine Wave</a></li>
+                        <li><a>Full Sine Wave</a></li>
+                        <li><a>Custom</a></li>
                     </ul>
                 </details>
-                <label for="frequency">
-                    Frequency
-                    <input
-                        type="text"
-                        id="frequency"
-                        name="frequency"
-                        placeholder="1.25"
-                        required
-                    />
-                </label>
+                <input class="flow-picker" type="file" accept=".csv" id="flow-picker" />
+                <input type="number" placeholder="Period (ms) Def 2000" aria-label="Number" min="0" step="200" />
                 <button class="contrast" id="connect">Connect</button>
                 <button id="upload">Upload</button>
             </div>

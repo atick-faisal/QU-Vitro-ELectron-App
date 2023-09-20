@@ -1,33 +1,44 @@
+body {
+    padding: 20px;
+}
+
 .header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    margin-bottom: 20px;
 }
 
 .title {
     margin: 0;
     padding: 0;
-    font-size:xx-large;
+    font-size: xx-large;
     font-weight: 300;
 }
 
 .content {
     display: flex;
     flex-direction: row;
-    padding: 20px;
-    height: 500px;
+    justify-content: space-between;
 }
 
 .chart {
-    width: 600px;
-    height: 400px;
-    margin: 30px;
+    width: 500px;
+    height: 300px;
+    margin-left: 30px;
+    margin-right: 30px;
 }
 
 .configuration {
-    width: 200px;
     display: flex;
     flex-direction: column;
+    width: 250px;
+    /* max-height: 400px; */
+    display: flex;
+    zoom: 0.8;
+}
+
+.flow-picker {
+    display: none;
 }

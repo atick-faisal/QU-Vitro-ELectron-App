@@ -29,8 +29,8 @@ const handleSerialComm = async () => {
 
 const createWindow = () => {
     win = new BrowserWindow({
-        width: 1200,
-        height: 600,
+        width: 800,
+        height: 480,
         autoHideMenuBar: true,
         icon: path.join(__dirname, "assets/pump.png"),
         webPreferences: {
@@ -39,14 +39,10 @@ const createWindow = () => {
     });
 
     win.loadFile("index.html");
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
 };
 
 app.whenReady().then(() => {
-    timer = setInterval(() => {
-        win.webContents.send("receive", i++);
-    }, 1000);
-
     handleSerialComm();
     createWindow();
 
@@ -57,7 +53,6 @@ app.whenReady().then(() => {
 
 app.on("window-all-closed", () => {
     if (process.platform !== "darwin") {
-        clearInterval(timer);
         app.quit();
     }
 });
