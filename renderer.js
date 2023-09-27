@@ -6,7 +6,8 @@ const ctx = document.getElementById("chart");
 const flowPicker = document.getElementById("flow-picker");
 
 const connectionSwitch = document.getElementById("connection-switch");
-const connectionStatus = document.getElementById("connection-status")
+const connectionStatus = document.getElementById("connection-status");
+const flowPeriodInput = document.getElementById("flow-period");
 
 const halfSineWave = [
     0, 32, 64, 95, 125, 152, 177, 199, 218, 233, 244, 251, 254, 253, 248, 239,
@@ -105,23 +106,32 @@ flowPicker.addEventListener("change", (e) => {
 Plotly.newPlot(ctx, plotData, plotLayout, plotConfig);
 
 sendButton.addEventListener("click", () => {
-    const serialData = "<" + flowData.join(",") + ">";
+    if (flowPeriodInput.value != "") {
+        const value = parseInt(flowPeriodInput.value);
+        if (value < 0 || value > 5000) {
+            alert("Invalid Period");
+            return;
+        }
+        flowPeriod = value;
+    }
+    let configuration = `${pumpType},${flowPeriod}|`;
+    const serialData = "<" + configuration + flowData.join(",") + ">";
     window.api.writeToSerial(serialData);
+    console.warn(serialData);
 });
 
 connectButton.addEventListener("click", async () => {
     if (connected) {
         await window.api.disconnect();
         connectButton.innerText = "Connect";
-        connectionStatus.innerText = "Device Disconnected"
+        connectionStatus.innerText = "Device Disconnected";
         connected = false;
     } else {
         connected = await window.api.connect();
         if (connected) {
             connectButton.innerText = "Disconnect";
-            connectionStatus.innerText = "Device Connected"
-        }
-        else alert("Connection Failed");
+            connectionStatus.innerText = "Device Connected";
+        } else alert("Connection Failed");
     }
     connectionSwitch.checked = connected;
 });

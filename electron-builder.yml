@@ -1,0 +1,6 @@
+appId: dev.atick.qu.vitro
+productName: QU-Vitro
+directories:
+  output: dist
+linux:
+  target: appimage
