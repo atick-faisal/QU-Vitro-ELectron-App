@@ -9,6 +9,8 @@ const connectionSwitch = document.getElementById("connection-switch");
 const connectionStatus = document.getElementById("connection-status");
 const flowPeriodInput = document.getElementById("flow-period");
 
+const nFLowPoints = 50;
+
 const halfSineWave = [
     0, 32, 64, 95, 125, 152, 177, 199, 218, 233, 244, 251, 254, 253, 248, 239,
     226, 209, 188, 165, 139, 110, 80, 48, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -22,17 +24,28 @@ const fullSineWave = [
     64, 32, 0,
 ];
 
+const maxFlowRate = 8;
+const minFLowRate = -2;
+
 let pumpType = 1;
 let flowData = [...halfSineWave];
 let flowPeriod = 2000;
 let connected = false;
 
+const mapToTimePoints = (x) => {
+    return (x / nFLowPoints) * flowPeriod;
+}
+
+const mapToActualFlowRate = (x) => {
+    return (x * (maxFlowRate - minFLowRate) / 255.0) + minFLowRate;
+}
+
 var plotData = [
     {
-        x: [...Array(halfSineWave.length).keys()].map(
-            (x) => (x / halfSineWave.length) * flowPeriod
+        x: [...Array(nFLowPoints).keys()].map(
+            (x) => (x / nFLowPoints) * flowPeriod
         ),
-        y: halfSineWave,
+        y: halfSineWave.map(mapToActualFlowRate),
         fill: "tozeroy",
         fillpattern: { shape: "/" },
         name: "Target Flow-Rate",
@@ -72,7 +85,7 @@ const plotLayout = {
         showgrid: false,
         zeroline: false,
         title: "Flow Rate",
-        range: [0, 350],
+        range: [minFLowRate - 1, maxFlowRate + 1],
     },
     margin: {
         l: 50,
@@ -96,8 +109,8 @@ flowPicker.addEventListener("change", (e) => {
     reader.onload = function (event) {
         const fileContent = event.target.result;
         flowData = fileContent.split(",").map(Number);
-        plotData[0]["x"] = [...Array(flowData.length).keys()];
-        plotData[0]["y"] = [...flowData];
+        plotData[0]["x"] = [...Array(flowData.length).keys()].map(mapToTimePoints);
+        plotData[0]["y"] = [...flowData].map(mapToActualFlowRate);
         Plotly.update(ctx, plotData, plotLayout, plotConfig);
     };
     reader.readAsText(selectedFile);
@@ -138,10 +151,8 @@ connectButton.addEventListener("click", async () => {
 
 window.api.onSerialRead((_, data) => {
     const flowRate = data.split(",").map((str) => parseInt(str, 10));
-    plotData[1]["x"] = [...Array(flowRate.length).keys()].map(
-        (x) => (x / flowRate.length) * flowPeriod
-    );
-    plotData[1]["y"] = [...flowRate];
+    plotData[1]["x"] = [...Array(flowRate.length).keys()].map(mapToTimePoints);
+    plotData[1]["y"] = [...flowRate].map(mapToActualFlowRate);
     Plotly.update(ctx, plotData, plotLayout, plotConfig);
 });
 
@@ -168,17 +179,13 @@ flowProfileSelector.querySelector("ul").addEventListener("click", (e) => {
     else {
         if (flowProfile === "half sine wave") {
             flowData = [...halfSineWave];
-            plotData[0]["x"] = [...Array(halfSineWave.length).keys()].map(
-                (x) => (x / halfSineWave.length) * flowPeriod
-            );
-            plotData[0]["y"] = [...halfSineWave];
+            plotData[0]["x"] = [...Array(nFLowPoints).keys()].map(mapToTimePoints);
+            plotData[0]["y"] = [...halfSineWave].map(mapToActualFlowRate);
             Plotly.update(ctx, plotData, plotLayout, plotConfig);
         } else if (flowProfile === "full sine wave") {
             flowData = [...fullSineWave];
-            plotData[0]["x"] = [...Array(fullSineWave.length).keys()].map(
-                (x) => (x / fullSineWave.length) * flowPeriod
-            );
-            plotData[0]["y"] = [...fullSineWave];
+            plotData[0]["x"] = [...Array(fullSineWave.length).keys()].map(mapToTimePoints);
+            plotData[0]["y"] = [...fullSineWave].map(mapToActualFlowRate);
             Plotly.update(ctx, plotData, plotLayout, plotConfig);
         }
         flowPicker.style.display = "none";
