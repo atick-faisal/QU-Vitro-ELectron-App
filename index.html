@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" data-theme="dark">
     <head>
         <meta charset="UTF-8" />
         <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
@@ -12,11 +12,11 @@
         <script src="./js/plotly.js" charset="utf-8"></script>
         <title>QU-Vitro</title>
     </head>
-    <body>
+    <body id="body" >
         <div class="header">
             <img src="./assets/pump.png" width="40px" height="40px" />
             <p class="title">QU-VITRO</p>
-            <img src="./assets/settings.png" width="48px" height="48px" />
+            <a href="#" id="theme_switcher"></a>
         </div>
         <div class="content">
             <div class="dashboard">
@@ -46,6 +46,19 @@
                 <details role="list" id="flow-profile-selector">
                     <summary aria-haspopup="listbox">Flow Profile</summary>
                     <ul role="listbox">
+                        
+                        <li><a>Ant Tibial</a></li>
+                        <li><a>Aorta Root</a></li>
+                        <li><a>Asc Aorta</a></li>
+                        <li><a>Desc Aorta</a></li>
+                        <li><a>Bifurcation</a></li>
+                        <li><a>Brachial</a></li>
+                        <li><a>Carotid</a></li>
+                        <li><a>Femoral</a></li>
+                        <li><a>Iliac</a></li>
+                        <li><a>Radial</a></li>
+                        <li><a>Thoracic Aorta</a></li>
+
                         <li><a>Half Sine Wave</a></li>
                         <li><a>Full Sine Wave</a></li>
                         <li><a>Custom</a></li>

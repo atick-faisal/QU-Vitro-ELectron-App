@@ -9,7 +9,25 @@ const connectionSwitch = document.getElementById("connection-switch");
 const connectionStatus = document.getElementById("connection-status");
 const flowPeriodInput = document.getElementById("flow-period");
 
-const nFLowPoints = 50;
+let isLight = false
+const html = document.documentElement
+const switchTheme = document.getElementById('theme_switcher')
+const os_default = '<svg viewBox="0 0 16 16"><path fill="currentColor" d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/></svg>'
+const sun = '<svg viewBox="0 0 16 16"><path fill="currentColor" d="M8 11a3 3 0 1 1 0-6a3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8a4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/></svg>'
+const moon = '<svg viewBox="0 0 16 16"><g fill="currentColor"><path d="M6 .278a.768.768 0 0 1 .08.858a7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277c.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316a.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71C0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278zM4.858 1.311A7.269 7.269 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.316 7.316 0 0 0 5.205-2.162c-.337.042-.68.063-1.029.063c-4.61 0-8.343-3.714-8.343-8.29c0-1.167.242-2.278.681-3.286z"/><path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"/></g></svg>'
+
+document.addEventListener('DOMContentLoaded', () => {
+    switchTheme.innerHTML = os_default
+    html.setAttribute('data-theme', 'dark')
+})
+switchTheme.addEventListener('click', (e) => {
+    e.preventDefault()
+    isLight = !isLight
+    html.setAttribute('data-theme', isLight ? 'light' : 'dark')
+    switchTheme.innerHTML = isLight ? sun : moon
+})
+
+const nFLowPoints = 300;
 
 const AORTA_ROOT = [
     55, 57, 59, 63, 67, 72, 79, 86, 94, 104, 114, 126, 137, 149, 160, 171, 180, 189, 197, 204, 210, 215, 220, 224, 228, 231, 234, 237, 240, 242, 244, 246, 248, 250, 251, 253, 254, 254, 255, 255, 255, 255, 254, 254, 253, 252, 251, 250, 249, 247, 245, 243, 241, 238, 236, 233, 231, 228, 226, 223, 221, 218, 216, 213, 211, 207, 203, 199, 194, 190, 185, 181, 177, 172, 167, 163, 158, 154, 150, 146, 142, 138, 135, 131, 128, 125, 122, 118, 114, 109, 105, 100, 96, 92, 88, 81, 73, 62, 51, 42, 36, 34, 35, 39, 44, 48, 51, 53, 53, 54, 54, 54, 55, 55, 54, 54, 54, 54, 54, 55, 55, 55, 54, 54, 54, 54, 54, 55, 55, 55, 54, 54, 54, 54, 55, 55, 55, 54, 54, 54, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 56, 56, 56, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 54, 54, 54, 54, 54, 54, 54, 54, 54, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 53, 54, 54, 54, 54, 54, 54, 54, 54, 54, 55, 55
@@ -55,13 +73,13 @@ const THORACIC_AORTA = [
     86, 86, 86, 86, 86, 86, 85, 85, 85, 85, 85, 85, 85, 85, 85, 84, 84, 84, 84, 85, 85, 87, 89, 92, 95, 99, 105, 111, 118, 126, 134, 142, 150, 157, 164, 170, 176, 181, 186, 190, 194, 198, 202, 207, 211, 215, 218, 222, 225, 229, 232, 235, 238, 240, 243, 245, 246, 248, 250, 251, 252, 253, 254, 254, 255, 255, 255, 254, 253, 252, 250, 248, 246, 243, 241, 239, 236, 233, 230, 227, 224, 220, 216, 211, 206, 201, 196, 191, 186, 181, 175, 170, 165, 159, 154, 149, 144, 139, 134, 128, 123, 119, 114, 110, 106, 101, 97, 92, 88, 84, 80, 77, 72, 68, 62, 55, 49, 43, 38, 35, 34, 35, 38, 40, 42, 43, 44, 44, 45, 45, 45, 45, 46, 46, 47, 48, 50, 52, 54, 56, 57, 59, 61, 63, 65, 67, 69, 71, 73, 74, 76, 78, 80, 83, 85, 87, 89, 91, 93, 95, 97, 98, 99, 100, 102, 103, 104, 105, 107, 108, 109, 109, 110, 111, 112, 112, 112, 112, 112, 113, 113, 113, 113, 113, 113, 112, 112, 112, 111, 110, 110, 109, 108, 107, 106, 105, 105, 104, 103, 103, 102, 101, 100, 100, 99, 98, 97, 96, 95, 94, 94, 93, 92, 91, 90, 90, 89, 88, 88, 87, 86, 86, 85, 84, 84, 83, 83, 83, 82, 82, 81, 81, 81, 81, 81, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 81, 81, 81, 81, 82, 82, 82, 82, 83, 83, 83, 83, 84, 84, 84, 84, 85, 85, 85, 85, 85, 86, 86, 86, 86, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 86, 86, 86
 ]
 
-const halfSineWave = [
+const HALF_SIN_WAVE = [
     0, 32, 64, 95, 125, 152, 177, 199, 218, 233, 244, 251, 254, 253, 248, 239,
     226, 209, 188, 165, 139, 110, 80, 48, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 ];
 
-const fullSineWave = [
+const FULL_SIN_WAVE = [
     0, 32, 64, 95, 125, 152, 177, 199, 218, 233, 244, 251, 254, 253, 248, 239,
     226, 209, 188, 165, 139, 110, 80, 48, 16, 16, 48, 80, 110, 139, 165, 188,
     209, 226, 239, 248, 253, 254, 251, 244, 233, 218, 199, 177, 152, 125, 95,
@@ -72,16 +90,28 @@ const maxFlowRate = 40;
 const minFLowRate = -10;
 
 let pumpType = 1;
-let flowData = [...halfSineWave];
+let flowData = [...HALF_SIN_WAVE];
 let flowPeriod = 2000;
 let connected = false;
 
 const mapToTimePoints = (x) => {
-    return (x / 300) * flowPeriod;
+    return (x / nFLowPoints) * flowPeriod;
 }
 
 const mapToActualFlowRate = (x) => {
     return (x * (maxFlowRate - minFLowRate) / 255.0) + minFLowRate;
+}
+
+const setFlowData = (x) => {
+    flowData = []
+    for (let i = 0; i < 50; i++) {
+        flowData.push(x[6 * i]);
+    }
+}
+
+const setTagetFlow = (x) => {
+    setFlowData(x);
+    updateTargetFlowPlotData(x);
 }
 
 var plotData = [
@@ -144,9 +174,9 @@ const plotLayout = {
     },
 };
 
-const updateTargetFlowPlotData = (x, y) => {
+const updateTargetFlowPlotData = (x) => {
     plotData[0]["x"] = [...Array(x.length).keys()].map(mapToTimePoints);
-    plotData[0]["y"] = [...y].map(mapToActualFlowRate);
+    plotData[0]["y"] = [...x].map(mapToActualFlowRate);
     Plotly.update(ctx, plotData, plotLayout, plotConfig);
 }
 
@@ -226,15 +256,31 @@ flowProfileSelector.querySelector("ul").addEventListener("click", (e) => {
     if (flowProfile === "custom") flowPicker.style.display = "block";
     else {
         if (flowProfile === "half sine wave") {
-            flowData = [...halfSineWave];
-            plotData[0]["x"] = [...Array(nFLowPoints).keys()].map(mapToTimePoints);
-            plotData[0]["y"] = [...halfSineWave].map(mapToActualFlowRate);
-            Plotly.update(ctx, plotData, plotLayout, plotConfig);
+            setTagetFlow(HALF_SIN_WAVE);
         } else if (flowProfile === "full sine wave") {
-            flowData = [...fullSineWave];
-            plotData[0]["x"] = [...Array(fullSineWave.length).keys()].map(mapToTimePoints);
-            plotData[0]["y"] = [...fullSineWave].map(mapToActualFlowRate);
-            Plotly.update(ctx, plotData, plotLayout, plotConfig);
+            setTagetFlow(FULL_SIN_WAVE);
+        } else if (flowProfile === "ant tibial") {
+            setTagetFlow(ANTERIOR_TIBIAL);
+        } else if (flowProfile === "aorta root") {
+            setTagetFlow(AORTA_ROOT);
+        } else if (flowProfile === "asc aorta") {
+            setTagetFlow(ASCENDING_AORTA);
+        } else if (flowProfile === "desc aorta") {
+            setTagetFlow(DESCENDING_AORTA);
+        } else if (flowProfile === "bifurcation") {
+            setTagetFlow(BIFURCATION);
+        } else if (flowProfile === "brachial") {
+            setTagetFlow(BRACHIAL);
+        } else if (flowProfile === "carotid") {
+            setTagetFlow(CAROTID);
+        } else if (flowProfile === "femoral") {
+            setTagetFlow(FEMORAL);
+        } else if (flowProfile === "iliac") {
+            setTagetFlow(ILIAC);
+        } else if (flowProfile === "radial") {
+            setTagetFlow(RADIAL);
+        } else if (flowProfile === "thoracic aorta") {
+            setTagetFlow(THORACIC_AORTA);
         }
         flowPicker.style.display = "none";
     }

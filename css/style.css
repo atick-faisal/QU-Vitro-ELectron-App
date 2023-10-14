@@ -1,5 +1,21 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
 body {
     padding: 20px;
+}
+
+ul {
+    overflow: auto;
+    max-height: 300px;
+}
+
+.header svg {
+    width: var(--font-size);
+    height: var(--font-size);
+    color: var(--contrast);
 }
 
 .header {
@@ -13,7 +29,7 @@ body {
 .title {
     margin: 0;
     padding: 0;
-    font-size: xx-large;
+    font-size: x-large;
     font-weight: 300;
 }
 
