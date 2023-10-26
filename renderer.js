@@ -177,8 +177,12 @@ const plotLayout = {
 };
 
 const updateTargetFlowPlotData = (x) => {
-    plotData[0]["x"] = [...Array(x.length).keys()].map(mapToTimePoints);
-    plotData[0]["y"] = [...x].map(mapToActualFlowRate);
+    flowData = []
+    for (let i = 0; i < 50; i++) {
+        flowData.push(x[6 * i]);
+    }
+    plotData[0]["x"] = [...Array(flowData.length).keys()].map(mapToTimePoints);
+    plotData[0]["y"] = [...flowData].map(mapToActualFlowRate);
     Plotly.update(ctx, plotData, plotLayout, plotConfig);
 }
 
@@ -258,6 +262,7 @@ pumpSelector.querySelector("ul").addEventListener("click", (e) => {
 // ... Flow Profile Selector
 const flowProfileSelector = document.getElementById("flow-profile-selector");
 flowProfileSelector.querySelector("ul").addEventListener("click", (e) => {
+    e.preventDefault();
     const summary = flowProfileSelector.querySelector("summary");
     const selectedItem = e.target.textContent;
     summary.innerText = selectedItem;
