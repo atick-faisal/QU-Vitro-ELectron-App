@@ -8,6 +8,7 @@ const flowPicker = document.getElementById("flow-picker");
 const connectionSwitch = document.getElementById("connection-switch");
 const connectionStatus = document.getElementById("connection-status");
 const flowPeriodInput = document.getElementById("flow-period");
+const diameterInput = document.getElementById("diameter");
 
 let isLight = false
 const html = document.documentElement
@@ -92,6 +93,7 @@ const minFLowRate = -10;
 let pumpType = 1;
 let flowData = [...HALF_SIN_WAVE];
 let flowPeriod = 2000;
+let diameter = 100;
 let connected = false;
 
 const mapToTimePoints = (x) => {
@@ -205,7 +207,15 @@ sendButton.addEventListener("click", () => {
         }
         flowPeriod = value;
     }
-    let configuration = `${pumpType},${flowPeriod}|`;
+    if (diameterInput.value != "") {
+        const value = parseInt(diameterInput.value);
+        if (value < 10 || value > 1000) {
+            alert("Invalid Diameter");
+            return;
+        }
+        diameter = value;
+    }
+    let configuration = `${pumpType},${flowPeriod},${diameter}|`;
     const serialData = "<" + configuration + flowData.join(",") + ">";
     window.api.writeToSerial(serialData);
     console.warn(serialData);
