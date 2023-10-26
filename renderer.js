@@ -118,8 +118,8 @@ const setTagetFlow = (x) => {
 
 var plotData = [
     {
-        x: [...Array(ANTERIOR_TIBIAL.length).keys()].map(mapToTimePoints),
-        y: FEMORAL.map(mapToActualFlowRate),
+        x: [...Array(HALF_SIN_WAVE.length).keys()].map(mapToTimePoints),
+        y: HALF_SIN_WAVE.map(mapToActualFlowRate),
         fill: "tozeroy",
         fillpattern: { shape: "/" },
         name: "Target Flow-Rate",
@@ -242,6 +242,7 @@ connectButton.addEventListener("click", async () => {
 });
 
 window.api.onSerialRead((_, data) => {
+    console.warn("UPDATING ... ")
     const flowRate = data.split(",").map((str) => parseInt(str, 10));
     plotData[1]["x"] = [...Array(flowRate.length).keys()].map(mapToTimePoints);
     plotData[1]["y"] = [...flowRate].map(mapToActualFlowRate);
