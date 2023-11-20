@@ -25,7 +25,7 @@ const handleSerialComm = async () => {
 
 const createWindow = () => {
     win = new BrowserWindow({
-        width: 800,
+        width: 1200,
         height: 480,
         autoHideMenuBar: true,
         icon: path.join(__dirname, "assets/pump.png"),
@@ -36,7 +36,7 @@ const createWindow = () => {
     });
 
     win.loadFile("index.html");
-    // win.webContents.openDevTools();
+    win.webContents.openDevTools();
 };
 
 app.whenReady().then(() => {
