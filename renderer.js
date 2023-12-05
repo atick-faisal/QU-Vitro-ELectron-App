@@ -246,7 +246,7 @@ window.api.onSerialRead((_, data) => {
     const flowRate = data.split(",").map((str) => parseInt(str, 10));
     plotData[1]["x"] = [...Array(flowRate.length).keys()].map(mapToTimePoints);
     plotData[1]["y"] = [...flowRate].map(mapToActualFlowRate).map((x) => x - 10);
-    Plotly.update(ctx, plotData, plotLayout, plotConfig);
+    // Plotly.update(ctx, plotData, plotLayout, plotConfig);
 });
 
 // ... Pump Type Selector
