@@ -183,8 +183,8 @@ const updateTargetFlowPlotData = (x) => {
     for (let i = 0; i < 50; i++) {
         flowData.push(x[i]);
     }
-    plotData[0]["x"] = [...Array(flowData.length).keys()].map(mapToTimePoints);
-    plotData[0]["y"] = [...flowData].map(mapToActualFlowRate);
+    // plotData[0]["x"] = [...Array(flowData.length).keys()].map(mapToTimePoints);
+    // plotData[0]["y"] = [...flowData].map(mapToActualFlowRate);
     // Plotly.update(ctx, plotData, plotLayout, plotConfig);
 }
 
@@ -195,8 +195,8 @@ flowPicker.addEventListener("change", (e) => {
     reader.onload = function (event) {
         const fileContent = event.target.result;
         flowData = fileContent.split(",").map(Number);
-        plotData[0]["x"] = [...Array(flowData.length).keys()].map(mapToTimePoints);
-        plotData[0]["y"] = [...flowData].map(mapToActualFlowRate);
+        // plotData[0]["x"] = [...Array(flowData.length).keys()].map(mapToTimePoints);
+        // plotData[0]["y"] = [...flowData].map(mapToActualFlowRate);
         // Plotly.update(ctx, plotData, plotLayout, plotConfig);
     };
     reader.readAsText(selectedFile);
