@@ -118,8 +118,10 @@ const setTagetFlow = (x) => {
 
 var plotData = [
     {
-        x: [...Array(HALF_SIN_WAVE.length).keys()].map(mapToTimePoints),
-        y: HALF_SIN_WAVE.map(mapToActualFlowRate),
+        // x: [...Array(HALF_SIN_WAVE.length).keys()].map(mapToTimePoints),
+        // y: HALF_SIN_WAVE.map(mapToActualFlowRate),
+        x: [],
+        y: [],
         fill: "tozeroy",
         fillpattern: { shape: "/" },
         name: "Target Flow-Rate",
@@ -183,7 +185,7 @@ const updateTargetFlowPlotData = (x) => {
     }
     plotData[0]["x"] = [...Array(flowData.length).keys()].map(mapToTimePoints);
     plotData[0]["y"] = [...flowData].map(mapToActualFlowRate);
-    Plotly.update(ctx, plotData, plotLayout, plotConfig);
+    // Plotly.update(ctx, plotData, plotLayout, plotConfig);
 }
 
 flowPicker.addEventListener("change", (e) => {
@@ -195,7 +197,7 @@ flowPicker.addEventListener("change", (e) => {
         flowData = fileContent.split(",").map(Number);
         plotData[0]["x"] = [...Array(flowData.length).keys()].map(mapToTimePoints);
         plotData[0]["y"] = [...flowData].map(mapToActualFlowRate);
-        Plotly.update(ctx, plotData, plotLayout, plotConfig);
+        // Plotly.update(ctx, plotData, plotLayout, plotConfig);
     };
     reader.readAsText(selectedFile);
 });
@@ -246,7 +248,7 @@ window.api.onSerialRead((_, data) => {
     const flowRate = data.split(",").map((str) => parseInt(str, 10));
     plotData[1]["x"] = [...Array(flowRate.length).keys()].map(mapToTimePoints);
     plotData[1]["y"] = [...flowRate].map(mapToActualFlowRate).map((x) => x - 10);
-    // Plotly.update(ctx, plotData, plotLayout, plotConfig);
+    Plotly.update(ctx, plotData, plotLayout, plotConfig);
 });
 
 // ... Pump Type Selector
